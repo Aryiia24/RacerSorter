@@ -1,0 +1,6 @@
+*.class
+*.project
+*.classpath
+org.*
+/java8api/target/**
+/java8api/.settings
