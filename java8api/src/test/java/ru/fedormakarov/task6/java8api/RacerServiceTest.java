@@ -5,14 +5,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RacersSorterTest {
+class RacerServiceTest {
     
-    private final RacersSorter racerSorter = new RacersSorter();
+    private final RacerService racerService = new RacerService();
     
     @Test
+    @DisplayName("Test on 20 racers should raw a line after 15 racer")
     void expectedRightOutput() throws IOException, URISyntaxException {
+        String abbrevioationFileName = "abbreviations.txt";
+        String startFileName = "start.log";
+        String endFileName = "end.log";
         assertEquals("1. Sebastian Vettel    |FERRARI                   |1:04.415\r\n"
                 + "2. Daniel Ricciardo    |RED BULL RACING TAG HEUER |1:12.013\r\n"
                 + "3. Valtteri Bottas     |MERCEDES                  |1:12.434\r\n"
@@ -32,7 +37,25 @@ class RacersSorterTest {
                 + "16. Brendon Hartley    |SCUDERIA TORO ROSSO HONDA |1:13.179\r\n"
                 + "17. Marcus Ericsson    |SAUBER FERRARI            |1:13.265\r\n"
                 + "18. Lance Stroll       |WILLIAMS MERCEDES         |1:13.323\r\n"
-                + "19. Kevin Magnussen    |HAAS FERRARI              |1:13.393\r\n", racerSorter.writeResult());
+                + "19. Kevin Magnussen    |HAAS FERRARI              |1:13.393\r\n", racerService.showTableRacers(abbrevioationFileName, startFileName, endFileName));
     }
-
+    
+    @Test
+    @DisplayName("Test on 10 racers shouldn't raw a line")
+    void expectedRightOutput2() throws IOException, URISyntaxException {
+        String abbrevioationFileName = "abbreviations_with_10_racer.txt";
+        String startFileName = "start.log";
+        String endFileName = "end.log";
+        assertEquals("1. Sebastian Vettel    |FERRARI                   |1:04.415\r\n"
+                + "2. Daniel Ricciardo    |RED BULL RACING TAG HEUER |1:12.013\r\n"
+                + "3. Valtteri Bottas     |MERCEDES                  |1:12.434\r\n"
+                + "4. Lewis Hamilton      |MERCEDES                  |1:12.460\r\n"
+                + "5. Kimi Raikkonen      |FERRARI                   |1:12.639\r\n"
+                + "6. Fernando Alonso     |MCLAREN RENAULT           |1:12.657\r\n"
+                + "7. Sergio Perez        |FORCE INDIA MERCEDES      |1:12.848\r\n"
+                + "8. Pierre Gasly        |SCUDERIA TORO ROSSO HONDA |1:12.941\r\n"
+                + "9. Carlos Sainz        |RENAULT                   |1:12.950\r\n"
+                + "10. Esteban Ocon       |FORCE INDIA MERCEDES      |1:13.028\r\n"
+                , racerService.showTableRacers(abbrevioationFileName, startFileName, endFileName));
+    }
 }

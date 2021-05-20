@@ -6,15 +6,15 @@ import java.net.URISyntaxException;
 public class Main {
 
     public static void main(String[] args) {
-
-        RacersSorter racersSorter = new RacersSorter();
+        RacerService racersSorter = new RacerService();
+        String abbrevioationFileName = "abbreviations.txt";
+        String startFileName = "start.log";
+        String endFileName = "end.log";
         try {
-            System.out.println(racersSorter.writeResult());
+            System.out.println(racersSorter.showTableRacers(abbrevioationFileName, startFileName, endFileName));
         } catch (IOException e) {
-
             e.printStackTrace();
         } catch (URISyntaxException e) {
-
             e.printStackTrace();
         }
     }
