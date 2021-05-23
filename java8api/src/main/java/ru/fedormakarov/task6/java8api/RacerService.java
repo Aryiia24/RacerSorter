@@ -7,17 +7,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.IntSupplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.w3c.dom.css.Counter;
 
 public class RacerService {
     private static final String WHITESPACE = " ";
@@ -42,17 +35,16 @@ public class RacerService {
         Integer topRacersSeparatorNumber = 15;
         int rowCounter = 1;
         for (int i = 0; i < sortedRacerList.size(); i++) {
-
             result.append(viewForOneRacer(sortedRacerList.get(i), rowCounter++, topRacersSeparatorNumber, maxNameLength,
                     maxTeamNameLength));
         }
-
         return result.toString();
     }
 
     private String viewForOneRacer(Racer racer, int racerCount, Integer topRacersNumber, int maxNameLength,
             int maxTeamLength) {
         int numberForLineOffset = 10;
+        int countDashesToEndLine = 17;
         StringBuilder result = new StringBuilder();
         String racerLapTime = TIME_FORMATTER.format(LocalTime.MIDNIGHT.plus(racer.getLapTime()));
         if (racerCount < numberForLineOffset) {
@@ -62,7 +54,7 @@ public class RacerService {
                     .toString();
         }
         if (racerCount == topRacersNumber) {
-            result.append(repeatChar(DASH, maxNameLength + maxTeamLength + 17) + LINE_SEPARATOR);
+            result.append(repeatChar(DASH, maxNameLength + maxTeamLength + countDashesToEndLine) + LINE_SEPARATOR);
         }
         return result
                 .append(String.format("%d. %-19s", racerCount, racer.getName())
@@ -72,13 +64,13 @@ public class RacerService {
 
     private List<Racer> createRacerList(Path pathToAbbreviationsFile, String startTimeFileName, String endTimeFileName)
             throws IOException {
-        int numbFirstWord = 0;
-        int numbSecondWord = 1;
-        int numbThirdWord = 2;
+        int racerAbbreviationIndex = 0;
+        int racerNameIndex = 1;
+        int racerTeamIndex = 2;
 
         return Files.lines(pathToAbbreviationsFile).map(line -> line.split("_")).map(s -> {
-            return new Racer(s[numbFirstWord], s[numbSecondWord], s[numbThirdWord],
-                    getLapTime(s[numbFirstWord], startTimeFileName, endTimeFileName));
+            return new Racer(s[racerAbbreviationIndex], s[racerNameIndex], s[racerTeamIndex],
+                    getLapTime(s[racerAbbreviationIndex], startTimeFileName, endTimeFileName));
         }).collect(Collectors.toList());
 
     }
@@ -86,19 +78,19 @@ public class RacerService {
     private Duration getLapTime(String racerAbbreviation, String startTimeFileName, String endTimeFileName) {
 
         try {
+            int racerAbreviationIndex = 3;
             Path pathStartFile = Paths.get(this.getClass().getClassLoader().getResource(startTimeFileName).toURI());
             Path pathEndFile = Paths.get(this.getClass().getClassLoader().getResource(endTimeFileName).toURI());
 
             String startTimeRightFormat = Files.lines(pathStartFile).filter(s -> s.contains(racerAbbreviation))
-                    .map(s -> s.substring(3).replace("_", "T").concat("Z")).findAny().get();
+                    .map(s -> s.substring(racerAbreviationIndex).replace("_", "T").concat("Z")).findAny().get();
             String endTimeRightFormat = Files.lines(pathEndFile).filter(s -> s.contains(racerAbbreviation))
-                    .map(s -> s.substring(3).replace("_", "T").concat("Z")).findAny().get();
+                    .map(s -> s.substring(racerAbreviationIndex).replace("_", "T").concat("Z")).findAny().get();
 
             Instant start = Instant.parse(startTimeRightFormat);
             Instant end = Instant.parse(endTimeRightFormat);
             return Duration.between(start, end);
         } catch (IOException | URISyntaxException e) {
-
             e.printStackTrace();
         }
         return null;
@@ -109,7 +101,6 @@ public class RacerService {
         for (int i = 0; i < quantity; i++) {
             stringBuilder.append(inputCharacter);
         }
-
         return stringBuilder.toString();
     }
 }

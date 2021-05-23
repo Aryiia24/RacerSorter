@@ -27,16 +27,8 @@ public class Racer implements Comparable<Racer> {
         return team;
     }
 
-    public void setTeam(String team) {
-        this.team = team;
-    }
-
     public Duration getLapTime() {
         return lapTime;
-    }
-
-    public void setLapTime(Duration lapTime) {
-        this.lapTime = lapTime;
     }
 
     @Override

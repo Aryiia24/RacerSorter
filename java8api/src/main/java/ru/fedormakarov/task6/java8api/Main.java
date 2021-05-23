@@ -10,13 +10,11 @@ public class Main {
         String abbrevioationFileName = "abbreviations.txt";
         String startFileName = "start.log";
         String endFileName = "end.log";
+
         try {
             System.out.println(racersSorter.showTableRacers(abbrevioationFileName, startFileName, endFileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
-
 }
